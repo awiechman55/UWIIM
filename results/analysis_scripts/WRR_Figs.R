@@ -1,5 +1,5 @@
 ################## Set up Workspace
-setwd("C:/Users/awiec/GitHub_local/UWIIM/results")
+#setwd("./results")
 
 library(tidyverse)
 library(gridExtra)
@@ -183,7 +183,7 @@ fig3 <- function(badShocks=TRUE, badCutoff_PS=-0.6, badCutoff_Q=-0.2,
       theme(legend.position="top") 
     plt_avg_invest_wrr_dr <- plt_avg_invest_wrr[[2]] + #ylim(-0.11,0.11) +
       theme(legend.position="none")  +
-      annotate(geom="text",angle=90,size=4, x=19, y = -0.058, label="Default") +
+      annotate(geom="text",angle=90,size=4, x=19, y = -0.1, label="Default") +
       ggtitle("Ending Rates (Avg Sens)")
     
     #Rate-making AS
@@ -261,5 +261,4 @@ wrr_fig3 <- fig3(badShocks=TRUE,badCutoff_PS=-0.6, noRel=TRUE, demRates=FALSE,
 vs_addtl <- c(10,4,6,7,13,15,16,17,18,19,20,21,22)
 
 #Generate Fourth Sensitivity Analysis Figure (Box-Whisker Plot of Additional Analysis)
-fig4 <- comp_bw(cs, vs_addtl,noavg=FALSE) + ylim(-1.25,3)
-fig4
+fig4 <- comp_bw(cs, vs_addtl,noavg=FALSE)

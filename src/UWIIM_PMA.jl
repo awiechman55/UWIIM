@@ -1117,16 +1117,17 @@ function u_m_v(x,p,t)
     x_t = ForwardDiff.value(x[5])
     c_v_t = ForwardDiff.value(x[13])
     μ_t = ForwardDiff.value(x[11])
+    x_max = ForwardDiff.value(p[12][1])
     
     #If it is not an investment priority (like PMA case), no maintenance needed
     if(p[19][2]==0)
         return 0
     else
         #Decide on goal state
-        x_goal = ifelse(x_t>p[12][1],p[12][1],x_t) #If the current capacity is above maximum, allow the capacity to decay to maximum
+        x_goal = ifelse(x_t>x_max,x_max,x_t) #If the current capacity is above maximum, allow the capacity to decay to maximum
     
         #Calculate volumetric investment need
-        u_m = (x_goal - x[5]*(1-p[15][4]))*μ_t*c_v_t
+        u_m = (x_goal - x_t*(1-p[15][4]))*μ_t*c_v_t
     
         #check and correct for negative investment
         if(u_m < 0)
@@ -1697,7 +1698,7 @@ function UpdateInfrastructure(x,u_impl,C_v_new,p,t) #H is the implemented H for 
             I_new[6] = ifelse(t == p[25][3]-1, (1+p[25][2])*I_t[6], I_t[6]) + u_k_t[6]
         end
     else #no change scenario
-        I_new[6] = I_t[6] + u_impl_k[6]
+        I_new[6] = I_t[6] + u_k_t[6]
     end  
     
     #Ground - currently no groundwater change scenario
@@ -1989,10 +1990,10 @@ end;
 #             Proportion of Rates from Fixed Charges             \beta_p           Proportion of the expected revenue to come from fixed per user charges                unitless           0.5           [0,1]
 #              Del Eff Investment Dollars Proportion           \phi_\eta                          Proportion of investment dollars to delivery efficiency                unitless           0.6           [0,1]
 #           Stor Capac Investment Dollars Proportion              \phi_v                             Proportion of investment dollars to storage capacity                unitless           0.3           [0,1]
-#   Surface Proc Capac Investment Dollars Proportion          \phi_{w_s}                  Proportion of investment dollars to surface processing capacity                unitless           0.3           [0,1]
-#    Ground Proc Capac Investment Dollars Proportion          \phi_{w_g}                   Proportion of investment dollars to ground processing capacity                unitless             0           [0,1]
-#       Surface Inflow Investment Dollars Proportion        \phi_{\mu_s}                               Proportion of investment dollars to surface inflow                unitless             0           [0,1]
-#        Ground Inflow Investment Dollars Proportion        \phi_{\mu_g}                                Proportion of investment dollars to ground inflow                unitless             0           [0,1]
+#   Surface Proc Capac Investment Dollars Proportion              \phiws                  Proportion of investment dollars to surface processing capacity                unitless           0.3           [0,1]
+#    Ground Proc Capac Investment Dollars Proportion              \phiwg                   Proportion of investment dollars to ground processing capacity                unitless             0           [0,1]
+#       Surface Inflow Investment Dollars Proportion            \phi\mus                               Proportion of investment dollars to surface inflow                unitless             0           [0,1]
+#        Ground Inflow Investment Dollars Proportion            \phi\mug                                Proportion of investment dollars to ground inflow                unitless             0           [0,1]
 # 
 #   ***Initial Conditions*** | Full Variable Name | Model Variable Name |
 #   Definition | Units |Default Value | Allowable Range | | ––––––– | ––– |
@@ -2003,9 +2004,9 @@ end;
 #   Surface Storage Fill | \upsilons0 | Fill proportion of surface storage |
 #   Unitless | 1 | [0, 1] | | Ground Storage Fill | \upsilong0 | Fill proportion
 #   of ground storage | Unitless | 1 | [0, 1] | | Surface Storage Capacity |
-#   \bar{\upsilon}s0 | Surface storage capacity (multiple of inflow standard
+#   \upsilonbars0 | Surface storage capacity (multiple of inflow standard
 #   deviation) | Unitless | 4 | [0, \infty) | | Ground Storage Capacity |
-#   \bar{\upsilon}g0 | Ground storage capacity (multiple of inflow standard
+#   \upsilonbarg0 | Ground storage capacity (multiple of inflow standard
 #   deviation) | Unitless | 1 | [0, \infty) | | Surface Processing Capacity |
 #   ws0 | Surface processing capacity (proportion of storage capacity & mean
 #   inflow) | Unitless | 1 | [0, \infty) | | Ground Processing Capacity | wg0 |
@@ -2023,17 +2024,18 @@ end;
 #   Per-Capita Demand | \chibar0 | Base per-capita demand, independent of ST
 #   conservation (proportion of mean inflow) | Unitless | 8E-7 | [0, \infty) | |
 #   Per-Capita Revenue | f0 | Proportion of per-capita revenue to max (\pimax) |
-#   Unitless | 0.5 | [0,1] | | Average Bond Investment | \tilde{J}^b_0 | Average
+#   Unitless | 0.5 | [0,1] | | Average Bond Investment | Jbavg_0 | Average
 #   annual bond-sourced investment | $/yr | 69000000 | [0,\infty) |
 
 #   Setup Function (Default)
 #   ––––––––––––––––––––––––––
 
-function Default(;μ_s_max = 200000, μ_g_max = 0.001, μ_other_1 = 0, μ_other_2 = 0, π_max = 400, ΔC_v_scen = 0, ρ_s = 0.2, ρ_g = 0.0, κ = 1500000, r = 0.1, η_max = 1.7, υ_bar_max_s = 12.0, 
+function Default(;μ_s_max = 200000, μ_g_max = 0.001, μ_other_1 = 0, μ_other_2 = 0, π_max = 1000, ΔC_v_scen = 0, ρ_s = 0.2, ρ_g = 0.0, κ = 1500000, r = 0.1, η_max = 1.7, υ_bar_max_s = 12.0, 
         υ_bar_max_g = 40.0, a_gv = 1.0, a_gq = 1.0, a_sv = 1.0, a_sq = 1.0, a_q2 = 1.0, a_q3 = 0, a_q4 = 0, a_q5 = 0, d_min = 0.04, δ_dbar = 0.004, δ_v = 0.07, δ_η = 0.07, δ_w_s = 0.07, 
         δ_w_g = 0.07, τ_d = 1.0, τ_v = 1.0, τ_η = 1.0, τ_w_s = 1.0, τ_w_g = 1.0, τ_μ_s = 1.0, τ_μ_g = 1.0, γ_1 = 1, γ_2 = 1.2, γ_3 = 2, ψ_r = 0.15, β_η = 0.3, β_v = 0.3, β_w_s = 0.3, β_w_g = 0.0, 
-        β_μ_s = 0.0, β_μ_g = 0.0, λ_1 = 22.0, λ_2 = 22.0, λ_3 = 22.0, ϵ_1 = 0.0, ϵ_2 = 0.0, ϵ_3 = 0.0, g_o = 2.5, g_dbar = 5948, g_η = 5873, g_vbar = 6000, g_ws = 4657, g_wg = 4657, g_μs = 4000, 
-        g_μg = 4000, z_op = 0.518, z_od = 1.167, z_dbar = 1, z_η = 1, z_vbar = 1, z_ws = 1, z_wg = 1, z_μs = 1, z_μg = 1, case = 0, Δμ_s_type = 0, Δμ_s_pc = 0.0, Δμ_s_t = 0, w_max_s = 1.0, 
+        β_μ_s = 0.0, β_μ_g = 0.0, λ_1 = 22.0, λ_2 = 22.0, λ_3 = 22.0, ϵ_1 = 0.0, ϵ_2 = 0.0, ϵ_3 = 0.0, 
+        g_o = 1, g_dbar = 2000, g_η = 2000, g_vbar = 2000, g_ws = 2000, g_wg = 2000, g_μs = 2000, 
+        g_μg = 2000, z_op = 0.5, z_od = 1.03, z_dbar = 1, z_η = 1, z_vbar = 1, z_ws = 1, z_wg = 1, z_μs = 1, z_μg = 1, case = 0, Δμ_s_type = 0, Δμ_s_pc = 0.0, Δμ_s_t = 0, w_max_s = 1.0, 
         w_max_g = 0.0, θ_g = 0, θ_1 = 0, τ_p = 5, α = 0.5, τ_b = 15, i_b = 0.04, ϕ_η = 0.6, ϕ_v = 0.3, ϕ_w_s = 0.3, ϕ_w_g = 0.0, ϕ_μ_s = 0.0, ϕ_μ_g = 0.0, β_p = 0.5, p_0 = 0.65, χ_0 = 8.0E-7, υ_s_0 = 1.0, 
         υ_g_0 = 1.0, υ_bar_s_0 = 4.0, υ_bar_g_0 = 1.0, w_s_0 = 1.0, w_g_0 = 0.0, q_s_0 = 1.0, q_g_0 = 0.0, μ_s_0 = 200000, μ_g_0 = 0.001, C_v_s_0 = 0.1, C_v_g_0 = 0.01, η_0 = 1.0, χbar_0 = 8.0E-7, 
         f_0 = 0.5, J_b_avg_0 = 69000000)
@@ -2195,8 +2197,8 @@ end;
 # 
 #                                Full Parameter Name Model Variable Name                                                                  Definition                   Units Default Value Allowable Range
 #   –––––––––––––––––––––––––––––––––––––––––––––––– ––––––––––––––––––– ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––– ––––––––––––––––––––––– ––––––––––––– –––––––––––––––
-#                                    Mean SRP Inflow           \mu_{SRP}                                     Mean inflow into PMA through SRP canals                     AFY        900000      [0,\infty)
-#                                    Mean CAP Inflow           \mu_{CAP}                                     Mean inflow into PMA through CAP canals                     AFY        650491      [0,\infty)
+#                                    Mean SRP Inflow             \mu_SRP                                     Mean inflow into PMA through SRP canals                     AFY        900000      [0,\infty)
+#                                    Mean CAP Inflow             \mu_CAP                                     Mean inflow into PMA through CAP canals                     AFY        650491      [0,\infty)
 #                            Mean Groundwater Inflow               \mug0                                            Mean Groundwater Inflow into PMA                     AFY        690602      [0,\infty)
 #                             Max Per Capita Revenue             \pi_max                                                      Max Per Capita Revenue                    $/yr          1000      [0,\infty)
 #                                  Carrying Capacity              \kappa                                                Population carrying capacity                Unitless       1500000     (0, \infty)
@@ -2245,8 +2247,8 @@ end;
 #                                 Bond Interest Rate                 i_b                                               Interest Rate of Issued Bonds                unitless          0.04           [0,1]
 #             Proportion of Rates from Fixed Charges             \beta_p      Proportion of the expected revenue to come from fixed per user charges                unitless           0.5           [0,1]
 #              Del Eff Investment Dollars Proportion           \phi_\eta                     Proportion of investment dollars to delivery efficiency                unitless        0.6605           [0,1]
-#   Surface Proc Capac Investment Dollars Proportion          \phi_{w_s}             Proportion of investment dollars to surface processing capacity                unitless        0.2964           [0,1]
-#    Ground Proc Capac Investment Dollars Proportion          \phi_{w_g}              Proportion of investment dollars to ground processing capacity                unitless        0.0331           [0,1]
+#   Surface Proc Capac Investment Dollars Proportion              \phiws             Proportion of investment dollars to surface processing capacity                unitless        0.2964           [0,1]
+#    Ground Proc Capac Investment Dollars Proportion              \phiwg              Proportion of investment dollars to ground processing capacity                unitless        0.0331           [0,1]
 #                           Initial SRP Availability               ASRP0                                       Initial Volume of Available SRP Water                     AFY     200275.18      [0,\infty)
 # 
 #   ***Initial Conditions***
@@ -2262,7 +2264,7 @@ end;
 #          Delivery Efficiency              \eta_0                               Delivery efficiency (proportion of withdrawn delivered) Unitless        0.9742     [0, \infty)
 #       Base Per-Capita Demand           \chibar_0    Base per-capita demand, independent of ST conservation (proportion of mean inflow) Unitless    8.96274E-8     [0, \infty)
 #           Per-Capita Revenue                 f_0                                     Proportion of per-capita revenue to max (\pi_max) Unitless       0.23836           [0,1]
-#      Average Bond Investment       \tilde{J}^b_0                                                Average annual bond-sourced investment     $/yr      69694375      [0,\infty)
+#      Average Bond Investment             Jbavg_0                                                Average annual bond-sourced investment     $/yr      69694375      [0,\infty)
 
 #   Determine Investment Cost Function Coefficients from Other Parameters
 #  (PMA-Specific Function)
@@ -2459,6 +2461,127 @@ end;
 #   a.) Generate Dataframe of Trajectory Variables
 #   ––––––––––––––––––––––––––––––––––––––––––––––––
 
+#   Reported Output Variables
+#   ---------------------------
+
+#                                         Full Variable Name Model Variable Name                                                                                        Definition      Units
+#   –––––––––––––––––––––––––––––––––––––––––––––––––––––––– ––––––––––––––––––– ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––– ––––––––––
+#                                                  Time Step                   t                                                                           Time Step (initial = 0)      years
+#                                                       Year                year                                                                                 Year of time step      years
+#                               Population (Non-Dimensional)                   p                                           Service population as a proportion of carrying capacity   Unitless
+#                                                 Population                   P                                                                                Service population    persons
+#                        Per Capita Demand (Non-Dimensional)                   χ                                            Per capita demand as a proportion of total mean inflow   Unitless
+#               Baseline Per Capita Demand (Non-Dimensional)                χbar                                   Baseline per capita demand as a proportion of total mean inflow   Unitless
+#                                              Annual Demand                   D                                               Total annual system demand at the start of the year        AFY
+#                                           Projected Demand              D_proj                                                                    Projected annual system demand        AFY
+#                                            Baseline Demand               D_bar                                                                       Baseline demand in the year        AFY
+#                                    Demand Post-Curtailment                D_ST                                                       System demand after curtailment in the year        AFY
+#                         Per Capita Demand Post-Curtailment                d_ST                                                   Per capita demand after curtailment in the year AFY/person
+#             Surface Water Reservoir Fill (Non-Dimensional)                 υ_s                                                      Proportional fill of surface water reservoir   Unitless
+#                 Groundwater Aquifer Fill (Non-Dimensional)                 υ_g                                                          Proportional fill of groundwater aquifer   Unitless
+#                 Surface Storage Capacity (Non-Dimensional)               υbars                       Surface water storage capacity as a proportion of inflow standard deviation   Unitless
+#                  Ground Storage Capacity (Non-Dimensional)               υbarg                         Groundwater storage capacity as a proportion of inflow standard deviation   Unitless
+#                                       Stored Surface Water                 V_s                               Volume of water stored in surface water reservoirs at start of year         AF
+#                                         Stored Groundwater                 V_g                                   Volume of water stored in groundwater aquifers at start of year         AF
+#                                   Surface Storage Capacity              Vbar_s                                                                    Surface water storage capacity         AF
+#                                    Ground Storage Capacity              Vbar_g                                                                     Ground water storage capacity         AF
+#       Projected Groundwater Aquifer Fill (Non-Dimensional)              υprojg                                                Projected proportional fill of groundwater aquifer   Unitless
+#              Surface Processing Capacity (Non-Dimensional)                 w_s                  Surface water processing capacity as a proportion of storage capacity and inflow   Unitless
+#               Ground Processing Capacity (Non-Dimensional)                 w_g                    Groundwater processing capacity as a proportion of storage capacity and inflow   Unitless
+#                        Maximum Surface Processing Capacity               wmaxs          Maximum surface water processing capacity as a proportion of storage capacity and inflow   Unitless
+#                         Maximum Ground Processing Capacity               wmaxg            Maximum groundwater processing capacity as a proportion of storage capacity and inflow   Unitless
+#                      Projected Surface Processing Capacity              wsproj        Projected surface water processing capacity as a proportion of storage capacity and inflow   Unitless
+#                           Surface Inflow (Non-Dimensional)                 q_s                                               Surface water inflow as a proportion of mean inflow   Unitless
+#                            Ground Inflow (Non-Dimensional)                 q_g                                                 Groundwater inflow as a proportion of mean inflow   Unitless
+#                                   Inflow (Non-Dimensional)                   q                                                       Total inflow as a proportion of mean inflow   Unitless
+#                                             Surface Inflow                 Q_s                                                                  Surface water inflow in the year        AFY
+#                                              Ground Inflow                 Q_g                                                                    Groundwater inflow in the year        AFY
+#                                               Total Inflow                   Q                                                                          Total inflow in the year        AFY
+#                                           Available Inflow                 Q_a                                                         Total inlow available for the city to use        AFY
+#                         Available Inflow (Non-Dimensional)                 q_a                    Total inlow available for the city to use as a proportion of total mean inflow   Unitless
+#                                   Available Surface Inflow                 Qas                                          Total surface water inflow available for the city to use        AFY
+#                                    Available Ground Inflow                 Qag                                            Total groundwater inflow available for the city to use        AFY
+#                                               Banked Water                 Q_b                                    Surface inflow water stored in groundwater storage in the year        AFY
+#                                        Mean Surface Inflow                 μ_s                                                                  Mean annual surface water inflow        AFY
+#                                         Mean Ground Inflow                 μ_g                                                                    Mean annual groundwater inflow        AFY
+#                                          Mean Total Inflow                   μ                                                                          Mean annual total inflow        AFY
+#                    Surface Inflow Coefficient of Variation                 Cvs                                          Coefficient of variation for surface water annual inflow   Unitless
+#                     Ground Inflow Coefficient of Variation                 Cvg                                            Coefficient of variation for groundwater annual inflow   Unitless
+#                                        Delivery Efficiency                   η                                            Delivery efficiency as a proportion of available water   Unitless
+#                              Projected Delivery Efficiency              η_proj                                  Projected delivery efficiency as a proportion of available water   Unitless
+#                                             Total Outflows                   O                                      All water releases and uses from storage sources in the year        AFY
+#                           Total Outflows (Non-Dimensional)                   o All water releases and uses from storage sources in the year as a proportion of total mean inflow   Unitless
+#                                    Demand-Related Outflows                 O_d                                                Water uses from storage to meet demand in the year        AFY
+#                  Demand-Related Outflows (Non-Dimensional)                 O_d           Water uses from storage to meet demand in the year as a proportion of total mean inflow   Unitless
+#                                    Demand-Related Outflows                 O_d                                                Water uses from storage to meet demand in the year        AFY
+#                  Demand-Related Outflows (Non-Dimensional)                 O_d           Water uses from storage to meet demand in the year as a proportion of total mean inflow   Unitless
+#                                           Surface Outflows                 O_s                                                   All surface water releases and uses in the year        AFY
+#                                           Surface Outflows                 o_s                    All surface water releases and uses in the year as a proportion of mean inflow   Unitless
+#                                            Ground Outflows                 O_g                                                     All groundwater releases and uses in the year        AFY
+#                                            Ground Outflows                 o_g                      All groundwater releases and uses in the year as a proportion of mean inflow   Unitless
+#                                             Flood Releases                 O_f                                                   Water released from storage to prevent overflow        AFY
+#                                             Flood Releases                 o_f              Water released from storage to prevent overflow as a proportion of total mean inflow   Unitless
+#                  Projected Legally Available Surface Water            Als_proj                                                         Projected legally available surface water        AFY
+#                    Projected Legally Available Groundwater            Alg_proj                                                           Projected legally available groundwater        AFY
+#                          Projected Available Surface water              Asproj                                                                 Projected available surface water        AFY
+#                            Projected Available Groundwater              Agproj                                                                   Projected available groundwater        AFY
+#                                    Available Surface Water                 A_s                                                  Total available surface water to use in the year        AFY
+#                                      Available Groundwater                 A_g                                                    Total available groundwater to use in the year        AFY
+#                                            Available Water                   A                                                          Total available water to use in the year        AFY
+#                            Legally Available Surface Water                 Als                                                 Total legally available surface water in the year        AFY
+#                              Legally Available Groundwater                 Alg                                                   Total legally available groundwater in the year        AFY
+#                        Technically Available Surface Water                 Ats                                             Total technically available surface water in the year        AFY
+#                          Technically Available GroundWater                 Atg                                               Total technically available groundwater in the year        AFY
+#                                                     Supply                   S                                                                          Total Supply in the year        AFY
+#                                           Projected Supply              S_proj                                                                            Projected total supply        AFY
+#                                Shortage Before Curtailment               ω_pre                                        Ratio of supply deficit to total demand before curtailment   Unitless
+#                                 Shortage After Curtailment              ω_post                                         Ratio of supply deficit to total demand after curtailment   Unitless
+#                                              Safety Factor                  SF                                                             Ratio of Supply to Demand in the year   Unitless
+#                                    Projected Safety Factor             SF_proj                                                               Projected ratio of supply to demand   Unitless
+#                                Debt Service Coverage Ratio                DSCR                                      Ratio of net revenue to debt service requirement in the year   Unitless
+#                                           Short-Term Error                 e_1                                   Error in the short-term curtailment action situation/controller   Unitless
+#                                            Long-Term Error                 e_2                                     Error in the long-term investment action situation/controller   Unitless
+#                                         Rate-Setting Error                 e_3                                             Error in the rate-setting action situation/controller   Unitless
+#                                     Short-Term Curtailment                 u_1      Short-term curtailment pursued in the year as a proportion of total mean inflow (terms of χ)   Unitless
+#                                       Short-Term Attention                 Y_1                               Attention in the short-term curtailment action situation/controller   Unitless
+#                                        Long-Term Attention                 Y_2                                 Attention in the long-term investment action situation/controller   Unitless
+#                                     Rate-Setting Attention                 Y_3                                         Attention in the rate-setting action situation/controller   Unitless
+#                                         Per Capita Revenue                   f                    Annual per capita revenue as a proportion of maximum annual per capita revenue   Unitless
+#                                                    Revenue                   R                                                               Total revenue generated in the year          $
+#                                            Operating Costs                 C_o                                                              Operating costs required in the year       $/yr
+#                                               Debt Service                 C_d                                                                 Debt service required in the year       $/yr
+#                                             Investment ($)                   J                                                    Total investment in infrastructure in the year       $/yr
+#                          Needed Maintenance Investment ($)              Jmneed                                          Needed infrastructure maintenance investment in the year       $/yr
+#                                 Maintenance Investment ($)                 J_m                                                    Maintenance investment implemented in the year       $/yr
+#                                Expansionary Investment ($)                 J_e                               Expansionary (increase capacity) investment implemented in the year       $/yr
+#                                Average Bond Investment ($)               Jbavg                                                    Average bond-sourced investment over all years       $/yr
+#                                        Bond Investment ($)                 J_b                                                               Bond-sourced investment in the year       $/yr
+#                              Direct Revenue Investment ($)                 J_o                                                      Direct investment of net revenue in the year       $/yr
+#                             Maximum Investment Allowed ($)               J_bar                                                Maximum investment that can be pursued in the year       $/yr
+#                              Expansionary Investment (AFY)              ueneed                               Expansionary (increase capacity) investment implemented in the year        AFY
+#                    Delivery Efficiency Investment Priority                 β_η                    Proportion of expansionary investment in the year going to delivery efficiency   Unitless
+#            Surface Processing Capacity Investment Priority                 βws            Proportion of expansionary investment in the year going to surface processing capacity   Unitless
+#             Ground Processing Capacity Investment Priority                 βwg             Proportion of expansionary investment in the year going to ground processing capacity   Unitless
+#                        Implemented Demand Investment (AFY)           uimpldbar                                              Investment in baseline demand management in the year        AFY
+#           Implemented Delivery Efficiency Investment (AFY)              uimplη                                                     Investment in delivery efficiency in the year        AFY
+#      Implemented Surface Storage Capacity Investment (AFY)           uimplvbar                                          Investment in surface water storage capacity in the year        AFY
+#   Implemented Surface Processing Capacity Investment (AFY)            uimplw_s                                       Investment in surface water processing capacity in the year        AFY
+#    Implemented Ground Processing Capacity Investment (AFY)            uimplw_g                                         Investment in groundwater processing capacity in the year        AFY
+#                Implemented Surface Inflow Investment (AFY)            uimplμ_s                                                    Investment in surface water inflow in the year        AFY
+#                 Implemented Ground Inflow Investment (AFY)            uimplμ_g                                                      Investment in groundwater inflow in the year        AFY
+# 
+#   ***PMA City-Unique Variables*** | Full Variable Name | Model Variable Name |
+#   Definition | Units | | ––––––– | ––– | ––––– | ––- | | SRP Use | O1 | Water
+#   used from SRP | AFY | | SRP Use (Non-Dimensional) | o1 | Water used from SRP
+#   as a proportion of mean inflow | Unitless | | CAP Use | O2 | Water used from
+#   CAP | AFY | | CAP Use (Non-Dimensional) | o2 | Water used from CAP as a
+#   proportion of mean inflow | AFY | | SRP Inflow | Q1 | Inflow from SRP into
+#   the PMA in the year | AFY | | CAP Inflow | Q2 | Inflow from CAP into the PMA
+#   in the year | AFY |
+
+#   Output Variable Dataframe Function
+#   ------------------------------------
+
 function createVarsDF(UWIIM,p,num_t,year_0)
    ##Generate Trajectory
     tr = trajectory(UWIIM, num_t)
@@ -2528,8 +2651,6 @@ function createVarsDF(UWIIM,p,num_t,year_0)
     w_max_s_ex = zeros(length(tr.data))
     w_max_g_ex = zeros(length(tr.data))
     J_m_need_ex = zeros(length(tr.data))
-    J_m_need_ws_ex = zeros(length(tr.data))
-    J_m_need_η_ex = zeros(length(tr.data))
     u_e_need_ex = zeros(length(tr.data))
     u_impl_dbar_ex = zeros(length(tr.data))
     u_impl_η_ex = zeros(length(tr.data))
@@ -2551,6 +2672,7 @@ function createVarsDF(UWIIM,p,num_t,year_0)
     β_η_ex = zeros(length(tr.data))
     β_w_s_ex = zeros(length(tr.data))
     β_w_g_ex = zeros(length(tr.data))
+    Q_b_ex = zeros(length(tr.data))
     
     
     #Note Phoenix Specific Variables
@@ -2561,7 +2683,6 @@ function createVarsDF(UWIIM,p,num_t,year_0)
         o_ex_2 = zeros(length(tr.data))
         Q_1_ex = zeros(length(tr.data))
         Q_2_ex = zeros(length(tr.data))
-        Q_b_ex = zeros(length(tr.data))
     end
     
     for i in 1:length(tr.data)
@@ -2628,8 +2749,6 @@ function createVarsDF(UWIIM,p,num_t,year_0)
         w_max_s_ex[i] = w_max_s(tr.data[i],p,t[i])
         w_max_g_ex[i] = w_max_g(tr.data[i],p,t[i])
         J_m_need_ex[i] = J_m_need(tr.data[i],p,t[i]) 
-        J_m_need_ws_ex[i] = J_m_w_s(tr.data[i],p,t[i]) 
-        J_m_need_η_ex[i] =J_m_η(tr.data[i],p,t[i]) 
         J_m_ex[i] = J_m(tr.data[i],p,t[i])
         J_e_ex[i] = J_e(tr.data[i],p,t[i])
         J_b_ex[i] = J_b(tr.data[i],p,t[i])
@@ -2672,28 +2791,25 @@ function createVarsDF(UWIIM,p,num_t,year_0)
     ##Shortage Calculations
     ω_pre = ifelse.(D_bar_ex.> S_ex,(D_bar_ex-S_ex)./D_bar_ex,0)
     ω_post = ifelse.(D_ST_ex.> S_ex,(D_ST_ex-S_ex)./D_ST_ex,0)
-    n_ω_pre = ifelse.(ω_pre .> 0, 1, 0)
-    n_ω_post = ifelse.(ω_post .> 0, 1, 0)
     
     ##Aggregate Variables into Single Dataframe
     if(p[24]==1)
-        vars = DataFrame(t=t,year=year_ex,p=p_ex, χ=χ, υ_s=υ_s, υ_g=υ_g, υ_bar_s=υ_bar_s, υ_bar_g=υ_bar_g, w_s=w_s, w_g=w_g, q_s=q_s_ex, q_g=q_g_ex, Q=Q_ex, q=q_ex, Q_s=Q_s_ex, Q_g=Q_g_ex, μ_s=μ_s, μ_g=μ_g, 
-            C_v_s=C_v_s, C_v_g=C_v_g, η=η, χbar=χbar, f=f,  μ=μ_ex, V_s = V_s_ex, V_g = V_g_ex, Vbar_s = Vbar_s_ex, Vbar_g = Vbar_g_ex, D=D_ex, D_proj=D_proj_ex,υ_proj_g=υ_proj_g_ex, O=O_ex, o=o_ex, O_d = O_d_ex, o_d = o_d_ex, 
+        vars = DataFrame(t=t,year=year_ex,p=p_ex, χ=χ, υ_s=υ_s, υ_g=υ_g, υ_bar_s=υ_bar_s, υ_bar_g=υ_bar_g, w_s=w_s, w_g=w_g, q_s=q_s_ex, q_g=q_g_ex, q=q_ex, Q_s=Q_s_ex, Q_g=Q_g_ex, Q=Q_ex, μ_s=μ_s, μ_g=μ_g, μ=μ_ex,
+            C_v_s=C_v_s, C_v_g=C_v_g, η=η, χbar=χbar, f=f,  V_s = V_s_ex, V_g = V_g_ex, Vbar_s = Vbar_s_ex, Vbar_g = Vbar_g_ex, D=D_ex, D_proj=D_proj_ex,υ_proj_g=υ_proj_g_ex, O=O_ex, o=o_ex, O_d = O_d_ex, o_d = o_d_ex, 
             O_s=O_s_ex, o_s=o_s_ex, O_g=O_g_ex, o_g=o_g_ex, O_f=O_f_ex, o_f=o_f_ex, O_1=O_ex_1, o_1=o_ex_1, O_2=O_ex_2, o_2=o_ex_2, P=P_ex, S=S_ex, S_proj=S_proj_ex,Q_a = Q_a_ex, q_a = q_a_ex, 
             Q_a_s = Q_a_s_ex, Q_a_g = Q_a_g_ex, SF=SF_ex, SF_proj=SF_proj_ex,DSCR=DSCR_ex, e_1=e_1_ex, e_2 = e_2_ex, e_3 = e_3_ex, u_1=u_1_ex, R=R_ex, Y_1=Y_1_ex, Y_2=Y_2_ex, Y_3 = Y_3_ex, C_o = C_o_ex, 
-            C_d = C_d_ex, J=J_ex, ω_pre=ω_pre,ω_post=ω_post,n_ω_pre=n_ω_pre,n_ω_post=n_ω_post, Q_1=Q_1_ex, Q_2=Q_2_ex, A_s=A_s_ex,A_g=A_g_ex,A=A_ex, A_l_s=A_l_s_ex, A_l_g=A_l_g_ex, A_w_s=A_w_s_ex,
-            A_w_g=A_w_g_ex, w_max_s = w_max_s_ex, w_max_g = w_max_g_ex, J_m_need=J_m_need_ex, J_m_need_ws= J_m_need_ws_ex,J_m_need_η=J_m_need_η_ex,u_impl_dbar =u_impl_dbar_ex,u_impl_η =u_impl_η_ex,u_impl_vbar =u_impl_vbar_ex, 
-            u_impl_w_s =u_impl_w_s_ex,u_impl_w_g =u_impl_w_g_ex,
-            u_impl_μ_s =u_impl_μ_s_ex,u_impl_μ_g =u_impl_μ_g_ex, J_m=J_m_ex, J_e=J_e_ex, J_b_avg=J_b_avg,J_bar=J_bar_ex,J_b=J_b_ex,J_o=J_o_ex, 
+            C_d = C_d_ex, J=J_ex, ω_pre=ω_pre,ω_post=ω_post, Q_1=Q_1_ex, Q_2=Q_2_ex, A_s=A_s_ex,A_g=A_g_ex,A=A_ex, A_l_s=A_l_s_ex, A_l_g=A_l_g_ex, A_w_s=A_w_s_ex,
+            A_w_g=A_w_g_ex, w_max_s = w_max_s_ex, w_max_g = w_max_g_ex, J_m_need=J_m_need_ex, u_impl_dbar =u_impl_dbar_ex,u_impl_η =u_impl_η_ex,u_impl_vbar =u_impl_vbar_ex, 
+            u_impl_w_s =u_impl_w_s_ex,u_impl_w_g =u_impl_w_g_ex, u_impl_μ_s =u_impl_μ_s_ex,u_impl_μ_g =u_impl_μ_g_ex, J_m=J_m_ex, J_e=J_e_ex, J_b_avg=J_b_avg,J_bar=J_bar_ex,J_b=J_b_ex,J_o=J_o_ex, 
             D_bar=D_bar_ex,D_ST = D_ST_ex, d_ST = d_ST_ex,u_e_need=u_e_need_ex,A_l_g_proj=A_l_g_proj_ex,A_g_proj=A_g_proj_ex, A_s_proj=A_s_proj_ex,η_proj=η_proj_ex,
             A_l_s_proj=A_l_s_proj_ex, β_η=β_η_ex,β_w_s=β_w_s_ex,β_w_g=β_w_g_ex,Q_b=Q_b_ex,w_s_proj=w_s_proj_ex)
     else 
-        vars = DataFrame(t=t,year=year_ex,p=p_ex, χ=χ, υ_s=υ_s, υ_g=υ_g, υ_bar_s=υ_bar_s, υ_bar_g=υ_bar_g, w_s=w_s, w_g=w_g, q_s=q_s_ex, q_g=q_g_ex, Q=Q_ex, q=q_ex, Q_s=Q_s_ex, Q_g=Q_g_ex, μ_s=μ_s, μ_g=μ_g, 
-            C_v_s=C_v_s, C_v_g=C_v_g, η=η, χbar=χbar, f=f,  μ=μ_ex, V_s = V_s_ex, V_g = V_g_ex, Vbar_s = Vbar_s_ex,υ_proj_g=υ_proj_g_ex,Vbar_g = Vbar_g_ex, D=D_ex, D_proj=D_proj_ex, O=O_ex, o=o_ex, O_d = O_d_ex, o_d = o_d_ex, O_s=O_s_ex, 
-            o_s=o_s_ex, O_g=O_g_ex, o_g=o_g_ex, O_f=O_f_ex, o_f=o_f_ex, P=P_ex, S=S_ex, S_proj=S_proj_ex, Q_a = Q_a_ex, q_a = q_a_ex, Q_a_s = Q_a_s_ex, Q_a_g = Q_a_g_ex, SF=SF_ex, SF_proj=SF_proj_ex, 
-            DSCR=DSCR_ex, e_1=e_1_ex, e_2 = e_2_ex, e_3 = e_3_ex, u_1=u_1_ex, R=R_ex, Y_1=Y_1_ex, Y_2=Y_2_ex, Y_3 = Y_3_ex, C_o = C_o_ex, C_d = C_d_ex, J=J_ex, ω_pre=ω_pre,ω_post=ω_post,n_ω_pre=n_ω_pre,
-            n_ω_post=n_ω_post, A_s=A_s_ex,A_g=A_g_ex,A=A_ex,A_l_s=A_l_s_ex, A_l_g=A_l_g_ex, A_w_s=A_w_s_ex,A_w_g=A_w_g_ex,w_max_s = w_max_s_ex, w_max_g = w_max_g_ex,J_m_need=J_m_need_ex,
-            J_m_need_ws= J_m_need_ws_ex,J_m_need_η=J_m_need_η_ex,u_impl_dbar =u_impl_dbar_ex,u_impl_η =u_impl_η_ex,u_impl_vbar =u_impl_vbar_ex, u_impl_w_s =u_impl_w_s_ex,u_impl_w_g =u_impl_w_g_ex,
+        vars = DataFrame(t=t,year=year_ex,p=p_ex, χ=χ, υ_s=υ_s, υ_g=υ_g, υ_bar_s=υ_bar_s, υ_bar_g=υ_bar_g, w_s=w_s, w_g=w_g, q_s=q_s_ex, q_g=q_g_ex, q=q_ex, Q_s=Q_s_ex, Q_g=Q_g_ex, Q=Q_ex, μ_s=μ_s, μ_g=μ_g, μ=μ_ex,
+            C_v_s=C_v_s, C_v_g=C_v_g, η=η, χbar=χbar, f=f, V_s = V_s_ex, V_g = V_g_ex, Vbar_s = Vbar_s_ex,υ_proj_g=υ_proj_g_ex,Vbar_g = Vbar_g_ex, D=D_ex, D_proj=D_proj_ex, O=O_ex, o=o_ex, O_d = O_d_ex, o_d = o_d_ex, 
+            O_s=O_s_ex, o_s=o_s_ex, O_g=O_g_ex, o_g=o_g_ex, O_f=O_f_ex, o_f=o_f_ex, P=P_ex, S=S_ex, S_proj=S_proj_ex, Q_a = Q_a_ex, q_a = q_a_ex, Q_a_s = Q_a_s_ex, Q_a_g = Q_a_g_ex, SF=SF_ex, SF_proj=SF_proj_ex, 
+            DSCR=DSCR_ex, e_1=e_1_ex, e_2 = e_2_ex, e_3 = e_3_ex, u_1=u_1_ex, R=R_ex, Y_1=Y_1_ex, Y_2=Y_2_ex, Y_3 = Y_3_ex, C_o = C_o_ex, C_d = C_d_ex, J=J_ex, ω_pre=ω_pre,ω_post=ω_post,
+            A_s=A_s_ex,A_g=A_g_ex,A=A_ex,A_l_s=A_l_s_ex, A_l_g=A_l_g_ex, A_w_s=A_w_s_ex,A_w_g=A_w_g_ex,w_max_s = w_max_s_ex, w_max_g = w_max_g_ex,J_m_need=J_m_need_ex,
+            u_impl_dbar =u_impl_dbar_ex,u_impl_η =u_impl_η_ex,u_impl_vbar =u_impl_vbar_ex, u_impl_w_s =u_impl_w_s_ex,u_impl_w_g =u_impl_w_g_ex,
             u_impl_μ_s =u_impl_μ_s_ex,u_impl_μ_g =u_impl_μ_g_ex, J_m=J_m_ex, J_e=J_e_ex,J_b_avg=J_b_avg,J_bar=J_bar_ex,J_b=J_b_ex,J_o=J_o_ex, D_bar=D_bar_ex,D_ST = D_ST_ex, d_ST = d_ST_ex,
             u_e_need=u_e_need_ex,A_l_g_proj=A_l_g_proj_ex,A_g_proj=A_g_proj_ex,A_s_proj=A_s_proj_ex,η_proj=η_proj_ex,A_l_s_proj=A_l_s_proj_ex, β_η=β_η_ex,β_w_s=β_w_s_ex,β_w_g=β_w_g_ex)
     end
@@ -2750,9 +2866,9 @@ function timeSeriesPlot_nondim(vars,p,x_0)
         plt_flows = plot(vars.t, [vars.q_a vars.o_d], labels=["In_avail" "Use"], ylims = (0,vars.q_a[1]*1.5), xlabel = "Year", ylabel="Flow/μ", title = "Inflows & Use", 
         legend = :outerright, linecolor = [:darkgreen :darkgreen], linestyle=[:solid :dot])
     else
-        plt_flows = plot(vars.t, [vars.q_a vars.Q_a_s./vars.μ p[13][4].*(1 .+ vars.C_v_s) p[13][4].*(1 .- vars.C_v_s) vars.Q_a_g./vars.μ vars.o_d vars.o_s vars.o_g vars.o_p vars.o_f], 
-            labels= ["In_avail" "In_s" "+σ_s" "-σ_s" "In_g" "Use_all" "Use_s" "Use_g" "Use_p" "Use_f"], ylims = (0,vars.q_a[1]*1.5), xlabel = "Year", ylabel="Flow/μ", title = "Inflows & Use", legend = :outerright, 
-            linecolor = [:black :green :green :green :turquoise :black :green :turquoise :blue :brown], linestyle=[:solid :solid :dash :dash :solid :dot :dot :dot :dot :dot])
+        plt_flows = plot(vars.t, [vars.q_a vars.Q_a_s./vars.μ p[13][4].*(1 .+ vars.C_v_s) p[13][4].*(1 .- vars.C_v_s) vars.Q_a_g./vars.μ vars.o_d vars.o_s vars.o_g vars.o_f], 
+            labels= ["In_avail" "In_s" "+σ_s" "-σ_s" "In_g" "Use_all" "Use_s" "Use_g" "Use_f"], ylims = (0,vars.q_a[1]*1.5), xlabel = "Year", ylabel="Flow/μ", title = "Inflows & Use", legend = :outerright, 
+            linecolor = [:black :green :green :green :turquoise :black :green :turquoise :brown], linestyle=[:solid :solid :dash :dash :solid :dot :dot :dot :dot])
     end
     
     #Storage Volume & Capacity
@@ -2843,14 +2959,14 @@ function timeSeriesPlot_dim(vars,p,x_0,units)
         vline!([year_CAP],labels="t_CAP",linestyle=:dash, linecolor = :magenta)
     else
         if(units == "AF")
-            plt_flows = plot(vars.year, [vars.Q_a.*0.001 vars.Q_a_s.*0.001 (1 .+ vars.C_v_s).*vars.μ_s.*p[13][4].*0.001 (1 .- vars.C_v_s).*vars.μ_s.*p[13][4].*0.001 vars.Q_a_g.*0.001 (1 .+ vars.C_v_g).*vars.μ_g.*p[13][2].*0.001 (1 .- vars.C_v_g).*vars.μ_g.*p[13][2].*0.001 vars.O_d.*0.001 vars.O_s.*0.001 vars.O_g.*0.001 vars.O_p.*0.001 vars.O_f.*0.001], 
-                labels=["In_all" "In_s" "+σ_s" "-σ_s" "In_g" "+σ_g" "-σ_g" "Use_all" "Use_s" "Use_g" "Use_p" "Flood"], ylims = (0,1.5*0.001*vars.μ[1]), xlabel = "Year", title = "Inflows & Use", ylabel = "KAFY", legend = :outerright, 
-                linecolor = [:black :green :green :green :turquoise :turquoise :turquoise :black :green :turquoise :blue :brown], linestyle=[:solid :solid :dash :dash :solid :dash :dash :dot :dot :dot :dot :dot], legendtitle="Inflows & Use")
+            plt_flows = plot(vars.year, [vars.Q_a.*0.001 vars.Q_a_s.*0.001 (1 .+ vars.C_v_s).*vars.μ_s.*p[13][4].*0.001 (1 .- vars.C_v_s).*vars.μ_s.*p[13][4].*0.001 vars.Q_a_g.*0.001 (1 .+ vars.C_v_g).*vars.μ_g.*p[13][2].*0.001 (1 .- vars.C_v_g).*vars.μ_g.*p[13][2].*0.001 vars.O_d.*0.001 vars.O_s.*0.001 vars.O_g.*0.001 vars.O_f.*0.001], 
+                labels=["In_all" "In_s" "+σ_s" "-σ_s" "In_g" "+σ_g" "-σ_g" "Use_all" "Use_s" "Use_g" "Flood"], ylims = (0,1.5*0.001*vars.μ[1]), xlabel = "Year", title = "Inflows & Use", ylabel = "KAFY", legend = :outerright, 
+                linecolor = [:black :green :green :green :turquoise :turquoise :turquoise :black :green :turquoise :brown], linestyle=[:solid :solid :dash :dash :solid :dash :dash :dot :dot :dot :dot], legendtitle="Inflows & Use")
         else
-            plt_flows = plot(vars.year, [vars.Q_a.*0.000000001 vars.Q_a_s.*0.000000001 (1 .+ vars.C_v_s).*vars.μ_s.*p[13][4].*0.000000001 (1 .- vars.C_v_s).*vars.μ_s.*p[13][4].*0.000000001 vars.Q_a_g.*0.000000001 (1 .+ vars.C_v_g).*vars.μ_g.*p[13][2].*0.000000001 (1 .- vars.C_v_g).*vars.μ_g.*p[13][2].*0.000000001 vars.O_d.*0.000000001 vars.O_s.*0.000000001 vars.O_g.*0.000000001 vars.O_p.*0.000000001 vars.O_f.*0.000000001], 
-                labels=["In_all" "In_s" "+σ_s" "-σ_s" "In_g" "+σ_g" "-σ_g" "Use_all" "Use_s" "Use_g" "Use_p" "Flood"], ylims = (0,1.5*0.000000001*vars.μ[1]), xlabel = "Year", title = "Inflows & Use", ylabel = "Bgal.yr", 
-                legend = :outerright, linecolor = [:black :green :green :green :turquoise :turquoise :turquoise :black :green :turquoise :blue :brown], 
-                linestyle=[:solid :solid :dash :dash :solid :dash :dash :dot :dot :dot :dot :dot], legendtitle="Inflows & Use")
+            plt_flows = plot(vars.year, [vars.Q_a.*0.000000001 vars.Q_a_s.*0.000000001 (1 .+ vars.C_v_s).*vars.μ_s.*p[13][4].*0.000000001 (1 .- vars.C_v_s).*vars.μ_s.*p[13][4].*0.000000001 vars.Q_a_g.*0.000000001 (1 .+ vars.C_v_g).*vars.μ_g.*p[13][2].*0.000000001 (1 .- vars.C_v_g).*vars.μ_g.*p[13][2].*0.000000001 vars.O_d.*0.000000001 vars.O_s.*0.000000001 vars.O_g.*0.000000001 vars.O_f.*0.000000001], 
+                labels=["In_all" "In_s" "+σ_s" "-σ_s" "In_g" "+σ_g" "-σ_g" "Use_all" "Use_s" "Use_g" "Flood"], ylims = (0,1.5*0.000000001*vars.μ[1]), xlabel = "Year", title = "Inflows & Use", ylabel = "Bgal.yr", 
+                legend = :outerright, linecolor = [:black :green :green :green :turquoise :turquoise :turquoise :black :green :turquoise :brown], 
+                linestyle=[:solid :solid :dash :dash :solid :dash :dash :dot :dot :dot :dot], legendtitle="Inflows & Use")
         end
     end
     
@@ -3015,30 +3131,27 @@ end;
 #   4. Example Ouptputs
 #   ≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡
 
+#   To run any of the setups below, simply uncomment the line of code and add
+#   whatever parameter or initial conditions changes you desire (see tables in
+#   ReadMe for guidance on changing parameter and initial conditions)
+
 #   With Phoenix Setup
 #   ====================
 
 #Generate Output (based on 1 trajectory with Phoenix setup) 
 #output_test_PHX = run_UWIIM(Phoenix(); t_run=50,year_0=2010,units="AF");
-#output_test_PHX[3][end]
+#output_test_PHX[3][end] #this line shows the dimensional (water units of AF) time series for the model run
 
 #   With Scottsdale Setup
 #   =======================
 
 #Generate Output (based on 1 trajectory with Phoenix setup)
 #output_test_Sc = run_UWIIM(Scottsdale(); t_run=50,year_0=2010,units="AF")
-#output_test_Sc[3][end]
+#output_test_Sc[3][end] #this line shows the dimensional (water units of AF) time series for the model run
 
 #   With Queen Creek Setup
 #   ========================
 
 #Generate Output
-output_test_QC = run_UWIIM(QueenCreek(Δμ_s_pc=0); t_run=50,year_0=2010,units="AF")
-output_test_QC[3][end]
-
-output_test_QC_01[1].V_g[end]
-
-output_test_QC[1].V_g[end]
-
-output_test_QC_01 = run_UWIIM(QueenCreek(Δμ_s_pc=-0.01); t_run=50,year_0=2010,units="AF")
-output_test_QC_01[3][end]
+#output_test_QC = run_UWIIM(QueenCreek(Δμ_s_pc=0); t_run=50,year_0=2010,units="AF")
+#output_test_QC[3][end] #this line shows the dimensional (water units of AF) time series for the model run

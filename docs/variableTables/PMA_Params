@@ -1,0 +1,57 @@
+***Parameters (PMA Cases)***
+
+| Full Parameter Name | Model Variable Name | Definition | Units |Default Value | Allowable Range |
+| -------------- | ------ | ---------- | ----- |------------- | --------------- |
+| Mean SRP Inflow | $\mu$_SRP | Mean inflow into PMA through SRP canals | AFY | 900000 | $[0,\infty)$ |
+| Mean CAP Inflow | $\mu$_CAP | Mean inflow into PMA through CAP canals | AFY | 650491 | $[0,\infty)$ |
+| Mean Groundwater Inflow | $\mu$_g_0 | Mean Groundwater Inflow into PMA | AFY | 690602 | $[0,\infty)$ |
+| Max Per Capita Revenue | $\pi$_max | Max Per Capita Revenue | \$/yr | 1000 | $[0,\infty)$ |
+| Carrying Capacity | $\kappa$ | Population carrying capacity | Unitless | 1500000 | $(0, \infty)$ |
+| Intrinsic Growth Rate | r | logistically fit, intrinsic growth rate of population | Unitless | 0.1 | $(0,\infty)$ |
+| Max Delivery Efficiency | $\eta$_max | Max attainable delivery efficiency | Unitless | 2.0 | $[0, 2]$ |
+| Max Legal Use of Ground Storage | a_gv | Max legally allowed use of ground storage (proportion) | Unitless | 1 | $[0,1]$ |
+| Max Legal Use of Ground Inflow | a_gq | Max legally allowed use of ground inflow (proportion) | Unitless | 1 | $[0,1]$ |
+| Max Legal Use of Surface Storage | a_sv | Max legally allowed use of surface storage (proportion) | Unitless | 0 | $[0,1]$ |
+| SRP Allocation | a_SRP | Proportion of SRP inflow allocated to city | Unitless | 0.30883 | $[0,1]$ | 
+| CAP Allocation | a_CAP | Proportion of CAP inflow allocated to city | Unitless | 0.41168 | $[0,1]$ | 
+| CAP Low Priority Allocation | a_CAP_low | Proportion of Low Priority CAP inflow allocated to city | Unitless | 0.5324 | $[0,1]$ |
+| CAP High Priority Allocation | a_CAP_high | Proportion of High Priority CAP inflow allocated to city | Unitless | 0.3894 | $[0,1]$ |
+| SRP NCS & Gatewater Allocation | a_SRP_NG | Proportion of SRP inflow allocation attributable to NCS and gatewater | Unitless | 0.06367 | $[0,1]$ |
+| Min Per Capita Use | d_min | Min possible per-capita demand | (Bgal/yr OR AFY)/person | 0.04 | $[0, \infty)$ |
+| Hard Infrastructure Decay | $\delta$ | Hard infrastructure decay value | Unitless | 0.05 | $[0,1]$ | 
+| Background Conservation Rate | $\delta$_dbar | Annual decay rate of long-term conservation measures (background) | Unitless | 0.0003 | $[0,1]$ |
+| LT Demand Mgmt Implementation Time | $\tau$_d | Time to implement long-term demand management | yrs | 1 | $[1,\infty)$ |
+| Hard Infrastructure Implementation Time | $\tau$_i | Hard infrastructure implementation times | yrs | 3 | $[1,\infty)$ | 
+| Long-Term Goal Supply Buffer | $\gamma$_2 | Goal long-term proportion between supply and demand | Unitless | 1.2 | $[0,\infty)$ |
+| Minimum Debt Service Coverage Ratio | $\gamma$_3 | Minimum Debt Service Coverage Ratio Allowed in any Year | unitless | 2 | $[0,\infty)$ |
+| Max Rate Increase | $\psi$_r | Max possible proportional increase in rates | Unitless | 0.06 | $[0,\infty)$ |
+| Delivery Efficiency Priority | $\beta$_$\eta$ | Proportion of long-term investments directed to delivery efficiency | Unitless | 0.2 | $[0,1]$ |
+| Surface Processing Priority | $\beta$_w_s | Proportion of long-term investments directed to surface processing capacity | Unitless | 0 | $[0,1]$ |
+| Ground Processing Priority | $\beta$_w_g | Proportion of long-term investments directed to ground processing capacity | Unitless | 0.7 | $[0,1]$ |
+| Short-Term Curtailment Sensitivity | $\lambda$_1 | Sensitivity (inst. friction component) in short-term investment | Unitless | 22 | $[0, \infty)$ |
+| Long-Term Investment Sensitivity | $\lambda$_2 | Sensitivity (inst. friction component) in long-term investment | Unitless | 22 | $[0, \infty)$ |
+| Rate-Setting Sensitivity | $\lambda$_3 | Sensitivity (inst. friction component) in rate-setting | Unitless | 22 | $[0, \infty)$ |
+| ST Curtailment Activation Threshold | $\epsilon$_1 | Threshold for action (inst. friction component) in short-term investment | Unitless | 0 | $[0, \infty)$ |
+| LT Investment Activation Threshold | $\epsilon$_2| Threshold for action (inst. friction component) in long-term investment | Unitless | 0 | $[0, \infty)$ |
+| Rate-Setting Activation Threshold | $\epsilon$_3| Threshold for action (inst. friction component) in rate-setting | Unitless | 0 | $[0, \infty)$ |
+| Operating Cost Function Coefficient | g_o | Coefficient in operating costs function (see equation) | Dollars/(persons*Vol) | 0.1435 |  $[0, \infty)$ |
+| LT Dem Mgmt Investment Coefficient | g_dbar | Coefficient in LT dem mgmt investment function | AFY/Dollars | 5948 | $[0,\infty)$ |
+| Operating Cost Population Scale Factor | z_op | Population scale factor in operating cost function | unitless | 0.5581 | $[0,\infty)$ |
+| Operating Cost Demand Scale Factor | z_od | Demand scale factor in operating cost function | unitless | 1.0303 | $[0,\infty)$ |
+| LT Dem Mgmt Investment Scale Factor | z_dbar | Investment scale factor for long-term demand management | unitless | 1 | $[0,\infty)$ |
+| Del Eff Investment Scale Factor | z_$\eta$ | Investment scale factor for delivery efficiency | unitless | 1.01266 | $[0,\infty)$ |
+| Proc Capacity Investment Scale Factor | z_w | Investment scale factor for processing capacity | unitless | 1.04019 | $[0,\infty)$ |
+| Mean Surface Inflow Change Type | $\Delta\mu$_s_type | Type of change to surface mean inflow (0 = none, 1 = gradual, 2 = sudden) | Unitless | 2 | $\{0,1,2\}$ |
+| Mean Surface Inflow Percent Change | $\Delta\mu$_s_pc | Percent change to surface mean inflow | Unitless | -0.284 | $[0, \infty)$ |
+| Mean Sufrace Inflow Change Time | $\Delta\mu$_s_t | Time that sudden change occurs or time that gradual change will be complete | yrs | 14 | $[0, \infty)$ |
+| Base Groundwater Use | $\theta$_g | Proportion of Demand that is usually served by groundwater | Unitless | 0.024 | $[0,1]$ |
+| SRP Demand Proportion | $\theta$_1 | Proportion of Demand that is SRP eligible | Unitless | 0.5 | $[0,1]$ |
+| Projection Years | $\tau$_p | Years of Projection for Long-Term Investment Signal | Years | 5 | $[0, \infty)$ |
+| ST Dem Mgmt Investment Effectiveness Coefficient | $\alpha$ | Coefficient for effectiveness in ST conservation investments | unitless | 0.5 | $[0,\infty)$ |
+| Bond Life | $\tau$_b | Life of issued bonds | years | 15 | $[0,\infty)$ |
+| Bond Interest Rate | i_b | Interest Rate of Issued Bonds | unitless | 0.04 | $[0,1]$ |
+| Proportion of Rates from Fixed Charges | $\beta$_p | Proportion of the expected revenue to come from fixed per user charges | unitless | 0.5 | $[0,1]$ |
+| Del Eff Investment Dollars Proportion | $\phi$_$\eta$ | Proportion of investment dollars to delivery efficiency | unitless | 0.6605 | $[0,1]$ |
+| Surface Proc Capac Investment Dollars Proportion | $\phi$_w_s | Proportion of investment dollars to surface processing capacity | unitless | 0.2964 | $[0,1]$ |
+| Ground Proc Capac Investment Dollars Proportion | $\phi$_w_g | Proportion of investment dollars to ground processing capacity | unitless | 0.0331 | $[0,1]$ |
+| Initial SRP Availability | A_SRP_0 | Initial Volume of Available SRP Water | AFY | 200275.18 | $[0,\infty)$ |

@@ -1,0 +1,118 @@
+***Output Variables (All Cases)***
+
+| Full Variable Name | Model Variable Name | Definition | Units | 
+| -------------- | ------ | ---------- | ----- |
+| Time Step | t | Time Step (initial = 0) | years |
+| Year | year | Year of time step | years |
+| Population (Non-Dimensional) | p | Service population as a proportion of carrying capacity | Unitless | 
+| Population | P | Service population | persons |
+| Per Capita Demand (Non-Dimensional) | χ | Per capita demand as a proportion of total mean inflow | Unitless |
+| Baseline Per Capita Demand (Non-Dimensional) | χbar | Baseline per capita demand as a proportion of total mean inflow | Unitless |
+| Annual Demand | D | Total annual system demand at the start of the year | AFY |
+| Projected Demand | D_proj | Projected annual system demand | AFY |
+| Baseline Demand | D_bar | Baseline demand in the year | AFY | 
+| Demand Post-Curtailment | D_ST | System demand after curtailment in the year | AFY |
+| Per Capita Demand Post-Curtailment | d_ST | Per capita demand after curtailment in the year | AFY/person |
+| Surface Water Reservoir Fill (Non-Dimensional) | υ_s | Proportional fill of surface water reservoir | Unitless |
+| Groundwater Aquifer Fill (Non-Dimensional) | υ_g | Proportional fill of groundwater aquifer | Unitless |
+| Surface Storage Capacity (Non-Dimensional) | υ_bar_s | Surface water storage capacity as a proportion of inflow standard deviation | Unitless |
+| Ground Storage Capacity (Non-Dimensional) | υ_bar_g | Groundwater storage capacity as a proportion of inflow standard deviation | Unitless |
+| Stored Surface Water | V_s | Volume of water stored in surface water reservoirs at start of year | AF |
+| Stored Groundwater | V_g | Volume of water stored in groundwater aquifers at start of year | AF |
+| Surface Storage Capacity | Vbar_s | Surface water storage capacity | AF |
+| Ground Storage Capacity | Vbar_g | Ground water storage capacity | AF |
+| Projected Groundwater Aquifer Fill (Non-Dimensional) | υ_proj_g | Projected proportional fill of groundwater aquifer | Unitless |
+| Surface Processing Capacity (Non-Dimensional) | w_s | Surface water processing capacity as a proportion of storage capacity and inflow | Unitless |
+| Ground Processing Capacity (Non-Dimensional) | w_g | Groundwater processing capacity as a proportion of storage capacity and inflow | Unitless |
+| Maximum Surface Processing Capacity | w_max_s | Maximum surface water processing capacity as a proportion of storage capacity and inflow | Unitless |
+| Maximum Ground Processing Capacity | w_max_g | Maximum groundwater processing capacity as a proportion of storage capacity and inflow | Unitless |
+| Projected Surface Processing Capacity | w_s_proj | Projected surface water processing capacity as a proportion of storage capacity and inflow | Unitless |
+| Surface Inflow (Non-Dimensional) | q_s | Surface water inflow as a proportion of mean inflow | Unitless |
+| Ground Inflow (Non-Dimensional) | q_g | Groundwater inflow as a proportion of mean inflow | Unitless |
+| Inflow (Non-Dimensional) | q | Total inflow as a proportion of mean inflow | Unitless |
+| Surface Inflow | Q_s | Surface water inflow in the year | AFY |
+| Ground Inflow | Q_g | Groundwater inflow in the year | AFY |
+| Total Inflow | Q | Total inflow in the year | AFY |
+| Available Inflow | Q_a | Total inlow available for the city to use | AFY |
+| Available Inflow (Non-Dimensional) | q_a | Total inlow available for the city to use as a proportion of total mean inflow | Unitless |
+| Available Surface Inflow | Q_a_s | Total surface water inflow available for the city to use | AFY |
+| Available Ground Inflow | Q_a_g | Total groundwater inflow available for the city to use | AFY |
+| Banked Water | Q_b | Surface inflow water stored in groundwater storage in the year | AFY |
+| Mean Surface Inflow | μ_s | Mean annual surface water inflow | AFY |
+| Mean Ground Inflow | μ_g | Mean annual groundwater inflow | AFY |
+| Mean Total Inflow | μ | Mean annual total inflow | AFY |
+| Surface Inflow Coefficient of Variation | C_v_s | Coefficient of variation for surface water annual inflow | Unitless | 
+| Ground Inflow Coefficient of Variation | C_v_g | Coefficient of variation for groundwater annual inflow | Unitless | 
+| Delivery Efficiency | η | Delivery efficiency as a proportion of available water | Unitless |
+| Projected Delivery Efficiency | η_proj | Projected delivery efficiency as a proportion of available water | Unitless |
+| Total Outflows | O | All water releases and uses from storage sources in the year | AFY |
+| Total Outflows (Non-Dimensional) | o | All water releases and uses from storage sources in the year as a proportion of total mean inflow | Unitless |
+| Demand-Related Outflows | O_d | Water uses from storage to meet demand in the year | AFY |
+| Demand-Related Outflows (Non-Dimensional) | O_d | Water uses from storage to meet demand in the year as a proportion of total mean inflow | Unitless |
+| Demand-Related Outflows | O_d | Water uses from storage to meet demand in the year | AFY |
+| Demand-Related Outflows (Non-Dimensional) | O_d | Water uses from storage to meet demand in the year as a proportion of total mean inflow | Unitless |
+| Surface Outflows | O_s | All surface water releases and uses in the year | AFY |
+| Surface Outflows | o_s | All surface water releases and uses in the year as a proportion of mean inflow | Unitless |
+| Ground Outflows | O_g | All groundwater releases and uses in the year | AFY |
+| Ground Outflows | o_g | All groundwater releases and uses in the year as a proportion of mean inflow | Unitless |
+| Flood Releases | O_f | Water released from storage to prevent overflow | AFY |
+| Flood Releases | o_f | Water released from storage to prevent overflow as a proportion of total mean inflow | Unitless |
+| Projected Legally Available Surface Water | A_l_s_proj | Projected legally available surface water | AFY |
+| Projected Legally Available Groundwater | A_l_g_proj | Projected legally available groundwater | AFY |
+| Projected Available Surface water | A_s_proj | Projected available surface water | AFY |
+| Projected Available Groundwater | A_g_proj | Projected available groundwater | AFY |
+| Available Surface Water | A_s | Total available surface water to use in the year | AFY |
+| Available Groundwater | A_g | Total available groundwater to use in the year | AFY |
+| Available Water | A | Total available water to use in the year | AFY |
+| Legally Available Surface Water | A_l_s | Total legally available surface water in the year | AFY |
+| Legally Available Groundwater | A_l_g | Total legally available groundwater in the year | AFY |
+| Technically Available Surface Water | A_t_s | Total technically available surface water in the year | AFY |
+| Technically Available GroundWater | A_t_g | Total technically available groundwater in the year | AFY |
+| Supply | S | Total Supply in the year | AFY |
+| Projected Supply | S_proj | Projected total supply | AFY |
+| Shortage Before Curtailment | ω_pre | Ratio of supply deficit to total demand before curtailment | Unitless |
+| Shortage After Curtailment | ω_post | Ratio of supply deficit to total demand after curtailment | Unitless |
+| Safety Factor | SF | Ratio of Supply to Demand in the year | Unitless |
+| Projected Safety Factor | SF_proj | Projected ratio of supply to demand | Unitless |
+| Debt Service Coverage Ratio | DSCR | Ratio of net revenue to debt service requirement in the year | Unitless |
+| Short-Term Error | e_1 | Error in the short-term curtailment action situation/controller | Unitless |
+| Long-Term Error | e_2 | Error in the long-term investment action situation/controller | Unitless |
+| Rate-Setting Error | e_3 | Error in the rate-setting action situation/controller | Unitless |
+| Short-Term Curtailment | u_1 | Short-term curtailment pursued in the year as a proportion of total mean inflow (terms of χ) | Unitless |
+| Short-Term Attention | Y_1 | Attention in the short-term curtailment action situation/controller | Unitless |
+| Long-Term Attention | Y_2 | Attention in the long-term investment action situation/controller | Unitless |
+| Rate-Setting Attention | Y_3 | Attention in the rate-setting action situation/controller | Unitless |
+| Per Capita Revenue | f | Annual per capita revenue as a proportion of maximum annual per capita revenue | Unitless |
+| Revenue | R | Total revenue generated in the year | \$ |
+| Operating Costs | C_o | Operating costs required in the year | \$/yr |
+| Debt Service | C_d | Debt service required in the year | \$/yr |
+| Investment (\$) | J | Total investment in infrastructure in the year | \$/yr |   
+| Needed Maintenance Investment (\$) | J_m_need | Needed infrastructure maintenance investment in the year | \$/yr |
+| Maintenance Investment (\$) | J_m | Maintenance investment implemented in the year | \$/yr |
+| Expansionary Investment (\$) | J_e | Expansionary (increase capacity) investment implemented in the year | \$/yr |
+| Average Bond Investment (\$) | J_b_avg | Average bond-sourced investment over all years | \$/yr |
+| Bond Investment (\$) | J_b | Bond-sourced investment in the year | \$/yr | 
+| Direct Revenue Investment (\$) | J_o | Direct investment of net revenue in the year | \$/yr |
+| Maximum Investment Allowed (\$) | J_bar | Maximum investment that can be pursued in the year | \$/yr |
+| Expansionary Investment (AFY) | u_e_need | Expansionary (increase capacity) investment implemented in the year | AFY |
+| Delivery Efficiency Investment Priority | β_η | Proportion of expansionary investment in the year going to delivery efficiency | Unitless |
+| Surface Processing Capacity Investment Priority | β_w_s | Proportion of expansionary investment in the year going to surface processing capacity | Unitless |
+| Ground Processing Capacity Investment Priority | β_w_g | Proportion of expansionary investment in the year going to ground processing capacity | Unitless |
+| Implemented Demand Investment (AFY) | u_impl_dbar | Investment in baseline demand management in the year | AFY |
+| Implemented Delivery Efficiency Investment (AFY) | u_impl_η | Investment in delivery efficiency in the year | AFY |
+| Implemented Surface Storage Capacity Investment (AFY) | u_impl_vbar | Investment in surface water storage capacity in the year | AFY |
+| Implemented Surface Processing Capacity Investment (AFY) | u_impl_w_s | Investment in surface water processing capacity in the year | AFY |
+| Implemented Ground Processing Capacity Investment (AFY) | u_impl_w_g | Investment in groundwater processing capacity in the year | AFY |
+| Implemented Surface Inflow Investment (AFY) | u_impl_μ_s | Investment in surface water inflow in the year | AFY |
+| Implemented Ground Inflow Investment (AFY) | u_impl_μ_g | Investment in groundwater inflow in the year | AFY |
+
+***PMA City-Unique Variables***
+
+| Full Variable Name | Model Variable Name | Definition | Units | 
+| -------------- | ------ | ---------- | ----- |
+| SRP Use | O_1 | Water used from SRP | AFY |
+| SRP Use (Non-Dimensional) | o_1 | Water used from SRP as a proportion of mean inflow | Unitless |
+| CAP Use | O_2 | Water used from CAP | AFY |
+| CAP Use (Non-Dimensional) | o_2 | Water used from CAP as a proportion of mean inflow | AFY |
+| SRP Inflow | Q_1 | Inflow from SRP into the PMA in the year | AFY |
+| CAP Inflow | Q_2 | Inflow from CAP into the PMA in the year | AFY |

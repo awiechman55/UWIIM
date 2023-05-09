@@ -1,0 +1,14 @@
+***Initial Conditions (PMA Cases)***
+
+| Full Variable Name | Model Variable Name | Definition | Units |Default Value | Allowable Range |
+| -------------- | ------ | ---------- | ----- |------------- | --------------- |
+| Population Fill | p_0 | Proportion of population to carrying capacity | Unitless | 0.86466 | $[0, \infty)$ |
+| Actual Per-Capita Demand | $\chi$_0 | per-capita demand, accounting for short-term conservation (proportion of mean inflow) | Unitless | 8.96274E-8 | $[0, \infty)$ |
+| Ground Storage Fill | $\upsilon$_g_0 | Fill proportion of ground storage | Unitless | 0.53257 | $[0, 1]$ |
+| Ground Processing Capacity | w_g_0 | Ground processing capacity (proportion of storage capacity & mean inflow) | Unitless | 0.005315 | $[0, \infty)$ |
+| Surface Inflow Variation | C_v_s_0 | Surface flow coefficient of variation | Unitless | 0.001 | $[0, \infty)$ |
+| Ground Inflow Variation | C_v_g_0 | Ground flow coefficient of variation | Unitless | 0.001 | $[0, \infty)$ |
+| Delivery Efficiency | $\eta$_0 | Delivery efficiency (proportion of withdrawn delivered) | Unitless | 0.9742 | $[0, \infty)$ |
+| Base Per-Capita Demand | $\chi$bar_0 | Base per-capita demand, independent of ST conservation (proportion of mean inflow) | Unitless | 8.96274E-8 | $[0, \infty)$ |
+| Per-Capita Revenue | f_0 | Proportion of per-capita revenue to max ($\pi$_max) | Unitless | 0.23836 | $[0,1]$ | 
+| Average Bond Investment | J_b_avg_0 | Average annual bond-sourced investment | \$/yr | 69694375 | $[0,\infty)$ |

@@ -1,0 +1,22 @@
+***Initial Conditions (Default Case)***
+
+| Full Variable Name | Model Variable Name | Definition | Units |Default Value | Allowable Range |
+| -------------- | ------ | ---------- | ----- |------------- | --------------- |
+| Population Fill | p_0 | Proportion of population to carrying capacity | Unitless | 0.65 | $[0, \infty)$ |
+| Actual Per-Capita Demand | $\chi$_0 | per-capita demand, accounting for short-term conservation (proportion of mean inflow) | Unitless | $8E-7$ | $[0, \infty)$ |
+| Surface Storage Fill | $\upsilon$_s_0 | Fill proportion of surface storage | Unitless | 1 | $[0, 1]$ |
+| Ground Storage Fill | $\upsilon$_g_0 | Fill proportion of ground storage | Unitless | 1 | $[0, 1]$ |
+| Surface Storage Capacity | $\upsilon$_bar_s_0 | Surface storage capacity (multiple of inflow standard deviation) | Unitless | 4 | $[0, \infty)$ |
+| Ground Storage Capacity | $\upsilon$_bar_g_0 | Ground storage capacity (multiple of inflow standard deviation) | Unitless | 1 | $[0, \infty)$ |
+| Surface Processing Capacity | w_s_0 | Surface processing capacity (proportion of storage capacity & mean inflow) | Unitless | 1 | $[0, \infty)$ |
+| Ground Processing Capacity | w_g_0 | Ground processing capacity (proportion of storage capacity & mean inflow) | Unitless | 0 | $[0, \infty)$ |
+| Surface Inflow | q_s_0 | Surface inflow (proportion of mean) | Unitless | 1 | $[0, \infty)$ |
+| Ground Inflow | q_g_0 | Ground inflow (proportion of mean) | Unitless | 0 | $[0, \infty)$ |
+| Mean Surface Inflow | $\mu$_s_0 | Mean surface inflow | AFY or Bgal/yr | 200000 | $[0, \infty)$ |
+| Mean Ground Inflow | $\mu$_g_0 | Mean ground inflow | AFY or Bgal/yr | 0 | $[0, \infty)$ |
+| Surface Inflow Variation | C_v_s_0 | Surface flow coefficient of variation | Unitless | 0.1 | $[0, \infty)$ |
+| Ground Inflow Variation | C_v_g_0 | Ground flow coefficient of variation | Unitless | 0.01 | $[0, \infty)$ |
+| Delivery Efficiency | $\eta$_0 | Delivery efficiency (proportion of withdrawn delivered) | Unitless | 1 | $[0, \infty)$ |
+| Base Per-Capita Demand | $\chi$bar_0 | Base per-capita demand, independent of ST conservation (proportion of mean inflow) | Unitless | $8E-7$ | $[0, \infty)$ |
+| Per-Capita Revenue | f_0 | Proportion of per-capita revenue to max ($\pi$_max) | Unitless | 0.5 | $[0,1]$ | 
+| Average Bond Investment | J_b_avg_0 | Average annual bond-sourced investment | \$/yr | 69000000 | $[0,\infty)$ |

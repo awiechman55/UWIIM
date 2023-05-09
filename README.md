@@ -2,6 +2,24 @@
 
 This repository contains the source code for the model and sensitivity analysis configuration, raw outputs of the sensitivity analysis, R scripts used to analyze the outputs of sensitivity analysis, and the figures used in the published manuscript associated with this version of the Urban Water Infrastructure Investment Model (UWIIM). The model is a general coupled infrastructure dynamical systems model, written in the Julia programming language (version 1.8.4) as a discrete time dynamical system, that incorporates operational infrastructure and political-economic feedback processes governing urban water systems. The model has been parameterized to reflect the water resources, financial, and demand context of three cities in the Phoenix Metropolitan Area (PMA): Phoenix, Scottsdale, and Queen Creek. 
 
+# Before Running the Model
+
+The UWIIM uses the Julia programming language (programmed in version 1.8.4). The following packages are needed to run the UWIIM:
+
+- Pkg 
+- Plots; pyplot
+- DynamicalSystems
+- Distributions
+- DataFrames
+- ForwardDiff
+- CSV
+
+The following additional packages are needed to replicate the sensitivity analysis:
+
+- SharedArrays
+- JLD2
+- FlexiMaps
+
 # Running the Model
 
 The UWIIM can be run through the provided Jupyter notebook ("UWIIM_PMA.ipynb") or any Julia compiler with the "UWIIM_PMA.jl" file. Both files contain all background functions with heavily commented explanations that can also be found in the Supporting Information document (see "docs" folder).

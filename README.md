@@ -4,7 +4,14 @@ This repository contains the source code for the model and sensitivity analysis 
 
 # Before Running the Model
 
-The UWIIM uses the Julia programming language (programmed in version 1.8.4). The following packages are needed to run the UWIIM:
+The UWIIM uses the Julia programming language (programmed in version 1.8.4). Download Julia here: https://julialang.org/downloads/ If you wish to use Julia via a Jupyter notebook, follow these instructions: https://datatofish.com/add-julia-to-jupyter/
+
+The UWIIM requires additional packages that can installed in your Julia environment. You can install a package with the following two lines of code: 
+
+using Pkg
+Pkg.add("Package Name")
+
+The following Julia packages are needed to run the UWIIM:
 
 - Pkg 
 - Plots; pyplot

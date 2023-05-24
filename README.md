@@ -9,6 +9,7 @@ The UWIIM uses the Julia programming language (programmed in version 1.8.4). Dow
 The UWIIM requires additional packages that can installed in your Julia environment. You can install a package with the following two lines of code: 
 
 using Pkg
+
 Pkg.add("Package Name")
 
 The following Julia packages are needed to run the UWIIM:

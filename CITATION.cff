@@ -1,0 +1,10 @@
+cff-version: 1.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Wiechman"
+  given-names: "Adam"
+  orcid: "https://orcid.org/0009-0001-1263-1251"
+title: "Urban Water Infrastructure Investment Model"
+version: 1.0
+date-released: 2024-2-7
+url: "ttps://github.com/awiechman55/UWIIM"

@@ -1,10 +1,25 @@
-cff-version: 1.0
-message: "If you use this software, please cite it as below."
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Urban Water Infrastructure Investment Model
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
 authors:
-- family-names: "Wiechman"
-  given-names: "Adam"
-  orcid: "https://orcid.org/0009-0001-1263-1251"
-title: "Urban Water Infrastructure Investment Model"
-version: 1.0
-date-released: 2024-2-7
-url: "ttps://github.com/awiechman55/UWIIM"
+  - given-names: Adam
+    family-names: Wiechman
+    email: ahwiechm@asu.edu
+    orcid: 'https://orcid.org/0009-0001-1263-1251'
+    affiliation: Arizona State University
+identifiers:
+  - type: doi
+    value: 10.4211/hs.136128c172c3414397be66e66678c7b4
+    description: HydroShare Repository
+  - type: url
+    value: 'https://github.com/awiechman55/UWIIM'
+    description: GitHub Repository
+repository-code: 'https://github.com/awiechman55/UWIIM'
+license: MIT
+date-released: '2023-05-24'

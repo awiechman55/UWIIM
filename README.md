@@ -1,4 +1,4 @@
-# Urban Water Infrastructure Investment Model (UWIIM), PMA Version
+# Urban Water Infrastructure Investment Model (UWIIM)
 
 This repository contains the source code for the model and sensitivity analysis configuration, raw outputs of the sensitivity analysis, R scripts used to analyze the outputs of sensitivity analysis, and the figures used in two manuscripts associated with the Urban Water Infrastructure Investment Model (UWIIM). The model is a general coupled infrastructure dynamical systems model, written in the Julia programming language as a discrete time dynamical system, that incorporates operational infrastructure and political-economic feedback processes governing urban water systems. 
 

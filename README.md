@@ -1,10 +1,12 @@
 # Urban Water Infrastructure Investment Model (UWIIM), PMA Version
 
-This repository contains the source code for the model and sensitivity analysis configuration, raw outputs of the sensitivity analysis, R scripts used to analyze the outputs of sensitivity analysis, and the figures used in the published manuscript associated with this version of the Urban Water Infrastructure Investment Model (UWIIM). The model is a general coupled infrastructure dynamical systems model, written in the Julia programming language (version 1.8.4) as a discrete time dynamical system, that incorporates operational infrastructure and political-economic feedback processes governing urban water systems. The model has been parameterized to reflect the water resources, financial, and demand context of three cities in the Phoenix Metropolitan Area (PMA): Phoenix, Scottsdale, and Queen Creek. 
+This repository contains the source code for the model and sensitivity analysis configuration, raw outputs of the sensitivity analysis, R scripts used to analyze the outputs of sensitivity analysis, and the figures used in two manuscripts associated with the Urban Water Infrastructure Investment Model (UWIIM). The model is a general coupled infrastructure dynamical systems model, written in the Julia programming language as a discrete time dynamical system, that incorporates operational infrastructure and political-economic feedback processes governing urban water systems. 
+
+The first version of the model (programmed in Julia version 1.8.4), used in the Water Resources Research manuscript, is parameterized to reflect the water resources, financial, and demand context of three cities in the Phoenix Metropolitan Area (PMA): Phoenix, Scottsdale, and Queen Creek. The second version (programmed in Julia version 1.10.0) is parameterized just for Phoenix. 
 
 # Before Running the Model
 
-The UWIIM uses the Julia programming language (programmed in version 1.8.4). Download Julia here: https://julialang.org/downloads/ If you wish to use Julia via a Jupyter notebook, follow these instructions: https://datatofish.com/add-julia-to-jupyter/
+The UWIIM uses the Julia programming language (programmed in version 1.8.4 for Water Resources Research and 1.10.0 for Phoenix Mixed Methods). Download Julia here: https://julialang.org/downloads/ If you wish to use Julia via a Jupyter notebook, follow these instructions: https://datatofish.com/add-julia-to-jupyter/
 
 The UWIIM requires additional packages that can be installed in your Julia environment. You can install a package with the following two lines of code: 
 
@@ -27,10 +29,11 @@ The following additional packages are needed to replicate the sensitivity analys
 - SharedArrays
 - JLD2
 - FlexiMaps
+- Distributed
 
 # Running the Model
 
-The UWIIM can be run through the provided Jupyter notebook ("UWIIM_PMA.ipynb") or any Julia compiler with the "UWIIM_PMA.jl" file. Both files contain all background functions with heavily commented explanations that can also be found in the Supporting Information document (see "docs" folder).
+The UWIIM can be run through the provided Jupyter notebook ("UWIIM_PMA.ipynb" or "UWIIM_PHX_2.ipynb") or any Julia compiler with the "UWIIM_PMA.jl" or "UWIIM_PHX.jl" file. Both files contain all background functions with heavily commented explanations that can also be found in the Supporting Information document (see "docs" folder).
 
 After compiling the source code in a Julia compiler or the Jupyter notebook, the one-line function that runs the UWIIM is **run_UWIIM()**, which takes four possible inputs. 
 
